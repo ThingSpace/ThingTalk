@@ -45,9 +45,8 @@ export const userRouter = router({
 
         }
         catch (err) {
-
+            console.error('Error during user login (findUnique):', err); // Add detailed error logging
             throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'An error occurred while logging in.' });
-            // --todo-- add error logging.
         }
 
         // Doesn't exist; Return.
