@@ -119,18 +119,33 @@ export const rateLimiter = new RateLimiterMemory({
  * @param {NextApiRequest} req - The request object
  */
 export const getClientInfo = (req: NextApiRequest) => {
-    const header = req.headers.forwarded; // No longer assert as string
+    let ip: string | null = null;
+    let host: string | null = null;
 
-    if (typeof header !== 'string') {
-        return {
-            ip: null,
-            host: null,
-        };
+    // Prioritize common proxy headers
+    if (typeof req.headers['x-forwarded-for'] === 'string') {
+        ip = req.headers['x-forwarded-for'].split(',')[0]?.trim() || null;
+    } else if (typeof req.headers['x-real-ip'] === 'string') {
+        ip = req.headers['x-real-ip'].split(',')[0]?.trim() || null;
+    } else if (typeof req.headers.forwarded === 'string') {
+        // Fallback to 'forwarded' header if others are not present
+        const forwardedHeader = req.headers.forwarded;
+        ip = forwardedHeader.split(';')[0]?.split('=')[1]?.trim() || null;
+        host = forwardedHeader.split(';')[1]?.split('=')[1]?.trim() || null;
     }
 
-    const userInfo = {
-        ip: header.split(';')[0]?.split('=')[1] || null,
-        host: header.split(';')[1]?.split('=')[1] || null,
+    // If IP is still null, try req.socket.remoteAddress (for direct connections)
+    if (!ip && req.socket && req.socket.remoteAddress) {
+        ip = req.socket.remoteAddress;
     }
-    return userInfo;
+
+    // Try to get host from 'host' header if not found from 'forwarded'
+    if (!host && typeof req.headers.host === 'string') {
+        host = req.headers.host;
+    }
+
+    return {
+        ip,
+        host,
+    };
 }
