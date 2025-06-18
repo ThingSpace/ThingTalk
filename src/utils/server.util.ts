@@ -119,8 +119,15 @@ export const rateLimiter = new RateLimiterMemory({
  * @param {NextApiRequest} req - The request object
  */
 export const getClientInfo = (req: NextApiRequest) => {
+    const header = req.headers.forwarded; // No longer assert as string
 
-    const header = req.headers.forwarded as string;
+    if (typeof header !== 'string') {
+        return {
+            ip: null,
+            host: null,
+        };
+    }
+
     const userInfo = {
         ip: header.split(';')[0]?.split('=')[1] || null,
         host: header.split(';')[1]?.split('=')[1] || null,
