@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from 'next/server'
+import jwt from 'jsonwebtoken';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -17,7 +18,14 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL('/app', request.url))
     }
 
-    // --todo- Validate the JWT token. If it is not valid, redirect to '/auth/login'.
+    // Validate the JWT token. If it is not valid, redirect to '/auth/login'.
+    try {
+        const secret = process.env.JWT_SECRET;
+        if (!secret) throw new Error('JWT secret not set');
+        jwt.verify(authCookie, secret);
+    } catch (err) {
+        return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
 
     // Yay! Cookie Present. We can proceed to /app route and extract the token to fetch information.
     return NextResponse.next();

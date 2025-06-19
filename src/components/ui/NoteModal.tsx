@@ -35,7 +35,7 @@ export const NoteModal = () => {
 
 	// Add Properties
 	const [text, setText] = React.useState(selectedNote?.text ?? '');
-	const [isNotePrivate, setIsNotePrivate] = React.useState(!selectedNote?.isPublished ?? false);
+	const [isNotePrivate, setIsNotePrivate] = React.useState(!selectedNote?.isPublished);
 
 	const createNoteMutation = trpc.post.create.useMutation();
 	const updateNoteMutation = trpc.post.edit.useMutation();

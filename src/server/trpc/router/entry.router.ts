@@ -1,11 +1,11 @@
-
 import { z } from "zod";
 
 import { router, protectedProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import type { Entry, Journal } from "@prisma/client";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
-
+import { logError } from "@utils/serverLogger";
+import { isJournalOwner } from "../isJournalOwner";
 
 export const entryRouter = router({
     create: protectedProcedure.input(z.object({
@@ -45,13 +45,13 @@ export const entryRouter = router({
             };
         }
         catch (err) {
+            logError('entryRouter.create', err);
             if (err instanceof PrismaClientKnownRequestError) {
                 throw new TRPCError({ code: 'BAD_REQUEST', message: err.message, });
             }
             else {
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'An error occurred while creating entry.' });
             }
-            // --todo-- add error logging.
         }
 
     }),
@@ -92,6 +92,7 @@ export const entryRouter = router({
                 throw new TRPCError({ code: 'BAD_REQUEST', message: err.message, });
             }
             else {
+                logError('entryRouter.getOne', err); // Log the error for internal tracking
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'An error occurred while fetching entry.', });
             }
         }
@@ -150,6 +151,7 @@ export const entryRouter = router({
                 throw new TRPCError({ code: 'BAD_REQUEST', message: 'An error occurred while updating the entry.', });
             }
             else {
+                logError('entryRouter.update', err); // Log the error for internal tracking
                 throw new TRPCError({ code: 'INTERNAL_SERVER_ERROR', message: 'Unable to update entry.', });
             }
         }
@@ -191,6 +193,7 @@ export const entryRouter = router({
                 });
             }
             else {
+                logError('entryRouter.delete', err); // Log the error for internal tracking
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: 'An error occurred while deleting the entry.',
@@ -242,13 +245,59 @@ export const entryRouter = router({
                 });
             }
             else {
+                logError('entryRouter.getAll', err); // Log the error for internal tracking
                 throw new TRPCError({
                     code: 'INTERNAL_SERVER_ERROR',
                     message: "An error occurred while fetching the entries.",
                 });
             }
         }
-    })
-})
+    }),
+    getJournalEntries: protectedProcedure
+        .use(isJournalOwner)
+        .input(z.object({
+            journalId: z.string(),
+        }))
+        .query(async ({ input, ctx }) => {
+            const { journalId } = input;
 
-// --todo-- This needs a middleware to ensure the user is the owner of the journal
+            if (journalId.length < 1) {
+                return [];
+            }
+
+            try {
+                const journal = await ctx.prisma.journal.findUnique({
+                    where: {
+                        id: journalId,
+                    },
+                    include: {
+                        entries: {
+                            select: {
+                                id: true,
+                                title: true,
+                                createdAt: true,
+                            },
+                            orderBy: {
+                                createdAt: "asc",
+                            }
+                        }
+                    }
+                });
+
+                return journal?.entries ? journal.entries : [];
+            } catch (err) {
+                if (err instanceof PrismaClientKnownRequestError) {
+                    throw new TRPCError({
+                        code: 'BAD_REQUEST',
+                        message: err.message,
+                    });
+                } else {
+                    logError('entryRouter.getJournalEntries', err);
+                    throw new TRPCError({
+                        code: 'INTERNAL_SERVER_ERROR',
+                        message: "An error occurred while fetching the entries.",
+                    });
+                }
+            }
+        }),
+});

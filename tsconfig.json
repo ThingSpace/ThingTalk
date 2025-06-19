@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -17,14 +21,40 @@
     "noUncheckedIndexedAccess": true,
     "baseUrl": "src",
     "paths": {
-      "@utils/*": ["utils/*"],
-      "@components/*": ["components/*"],
-      "@pages/*": ["pages/*"],
-      "@server/*": ["server/*"],
-      "@styles/*": ["styles/*"],
-      "@env/*": ["env/*"]
-    }
+      "@utils/*": [
+        "utils/*"
+      ],
+      "@components/*": [
+        "components/*"
+      ],
+      "@pages/*": [
+        "pages/*"
+      ],
+      "@server/*": [
+        "server/*"
+      ],
+      "@styles/*": [
+        "styles/*"
+      ],
+      "@env/*": [
+        "env/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ]
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
-  "exclude": ["node_modules"]
+  "include": [
+    "**/*.cjs",
+    "**/*.mjs",
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }
