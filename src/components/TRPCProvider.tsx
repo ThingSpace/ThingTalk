@@ -15,7 +15,8 @@ const trpcClient = trpcReact.createClient({
 	links: [
 		loggerLink({
 			enabled: (opts) =>
-				process.env.NODE_ENV === 'development' || (opts.direction === 'down' && opts.result instanceof Error),
+				process.env.NODE_ENV === 'development' || 
+				(opts.direction === 'down' && opts.result instanceof Error),
 		}),
 		httpBatchLink({
 			url:
@@ -24,9 +25,9 @@ const trpcClient = trpcReact.createClient({
 					: process.env.VERCEL_URL
 						? `https://${process.env.VERCEL_URL}/api/trpc`
 						: `http://localhost:${process.env.PORT ?? 3000}/api/trpc`,
+			transformer: superjson,
 		}),
 	],
-	transformer: superjson,
 });
 
 export default function TRPCProvider({ children, queryClient }: TRPCProviderProps) {
