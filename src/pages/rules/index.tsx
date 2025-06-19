@@ -8,22 +8,32 @@ const RulesData = {
 	0: {
 		title: 'Freedom of Expression & Zero Tolerance for Hate',
 		description:
-			'We champion open expression and believe every voice deserves to be heard. However, this platform has zero tolerance for hate speech, harassment, threats of violence, or any content that promotes discrimination. Responsible communication is paramount.',
+			'Express yourself freely, but remember that freedom comes with responsibility. We have zero tolerance for hate speech, discrimination, harassment, or content that promotes violence. Every voice matters, but it must respect others\' dignity.',
 	},
 	1: {
-		title: 'Protecting Privacy: Fictionalize Personal Stories',
+		title: 'Privacy is Sacred',
 		description:
-			'When sharing personal stories, you must use fictional names, characters, and locations. This protects your privacy and the privacy of others. Doxing or outing is strictly prohibited.',
+			'When sharing personal stories, always use fictional names and alter identifying details. Never share private information about yourself or others. Doxing or attempting to reveal someone\'s identity will result in an immediate ban.',
 	},
 	2: {
-		title: 'Respectful Disagreement: Scroll Past',
+		title: 'Mindful Interaction',
 		description:
-			'If you encounter content you disagree with, please scroll past. Engaging in arguments or disrespectful discourse is not permitted. Maintain a positive and constructive environment.',
+			'Disagree with respect. If content doesn\'t resonate with you, simply scroll past. Don\'t engage in hostile arguments or personal attacks. Remember: behind every post is a real person with real feelings.',
 	},
 	3: {
-		title: 'Strictly No Illegal Content (Canadian Law)',
+		title: 'Content Guidelines',
 		description:
-			'Any content or activity deemed illegal under Canadian Federal or Provincial law is strictly prohibited and will result in an immediate, permanent ban.',
+			'Keep content appropriate and legal under Canadian law. No explicit content, spam, or commercial promotion. Posts should be genuine expressions, not attempts to manipulate or mislead.',
+	},
+	4: {
+		title: 'Mental Health Awareness',
+		description:
+			'While we encourage sharing feelings and experiences, we\'re not a substitute for professional help. If you or someone seems in crisis, please seek appropriate professional support. We\'ll provide resources when needed.',
+	},
+	5: {
+		title: 'Community Responsibility',
+		description:
+			'Help maintain our safe space. Report violations, but don\'t engage with trolls. Your active participation in keeping this space healthy is crucial. Remember: we\'re all in this together.',
 	},
 };
 
@@ -39,69 +49,53 @@ const RulesPage = () => {
 			animate={{ opacity: 1 }}
 			exit={{ opacity: 0 }}
 			transition={{ duration: 0.5 }}>
-			<NextSeo title="Rules" description="The Rule's Page Of A Thing." />
+			<NextSeo title="Rules" description="Community Guidelines - A Thing" />
 			<div className="mt-[60px] flex w-full flex-col gap-5 lg:flex-row">
 				<div className="absolute top-5 left-5 cursor-pointer rounded-full bg-white p-2" onClick={() => router.back()}>
 					<IoArrowBack className="h-10 w-10 p-2 text-black" />
 				</div>
 				<div className="flex w-fit flex-col justify-center gap-5 border-2 bg-white p-5 hover:border-black">
-					<h1 className="text-2xl font-bold">Note</h1>
+					<h1 className="text-2xl font-bold">Welcome to Our Community</h1>
 					<div className="flex flex-col font-normal">
-						<h6 className=""></h6>
-						<p className="">
-							Welcome to <b className="font-semibold text-green-600 underline decoration-wavy">A Thing</b>.
-							We believe in the power of open expression and the right for every voice to be heard.
-							This platform is built on the principle of responsible communication.
-							While we encourage diverse opinions, we maintain a strict zero tolerance policy for any violations of the rules outlined in this page.
-							Breaking these rules <b className="font-semibold text-red-600">will result in a permanent ban.</b>
-							{" "}If you have any suggestions or feedback, drop me a{' '}
+						<p className="prose max-w-none">
+							At <b className="font-semibold text-green-600 underline decoration-wavy">A Thing</b>, we believe in the power of authentic expression.
+							This is your space to share, reflect, and connect - safely and anonymously.
+							<br /><br />
+							Our community thrives on trust and mutual respect. While we encourage open dialogue and diverse perspectives,
+							we maintain strict guidelines to ensure everyone feels secure and respected.
+							<br /><br />
+							Breaking these rules <b className="font-semibold text-red-600">will result in immediate action</b>, typically a permanent ban.
+							We take our community's safety seriously.
+							<br /><br />
+							Have suggestions? Reach out on{' '}
 							<a
 								href="https://twitter.com/intent/tweet?screen_name=theathingapp"
 								className="cursor-pointer font-semibold text-blue-600 underline decoration-wavy"
 								target="_blank"
 								rel="noreferrer">
-								tweet
+								Twitter
 							</a>
-							. Regards,{<br />}{<br />}
-							Pixelated
+							. Let's build this space together.
+							<br /><br />
+							With love and care,<br />
+							The A Thing Team
 						</p>
 					</div>
 				</div>
 				<div className="flex flex-col border-2 bg-white p-5 hover:border-black">
-					<h1 className="text-2xl font-bold">Rules</h1>
-					<div className="flex flex-col font-normal">
-						<h6
-							className="cursor-pointer p-2 hover:bg-black hover:text-white"
-							onClick={() => {
-								setRuleInfo(RulesData[0]);
-								setShowRuleInfo(true);
-							}}>
-							1. Freedom of Expression & Zero Tolerance for Hate
-						</h6>
-						<h6
-							className="cursor-pointer p-2 hover:bg-black hover:text-white"
-							onClick={() => {
-								setRuleInfo(RulesData[1]);
-								setShowRuleInfo(true);
-							}}>
-							2. Protecting Privacy: Fictionalize Personal Stories
-						</h6>
-						<h6
-							className="cursor-pointer p-2 hover:bg-black hover:text-white"
-							onClick={() => {
-								setRuleInfo(RulesData[2]);
-								setShowRuleInfo(true);
-							}}>
-							3. Respectful Disagreement: Scroll Past
-						</h6>
-						<h6
-							className="cursor-pointer p-2 hover:bg-black hover:text-white"
-							onClick={() => {
-								setRuleInfo(RulesData[3]);
-								setShowRuleInfo(true);
-							}}>
-							4. Strictly No Illegal Content (Canadian Law)
-						</h6>
+					<h1 className="text-2xl font-bold mb-4">Community Guidelines</h1>
+					<div className="flex flex-col font-normal space-y-2">
+						{Object.entries(RulesData).map(([key, rule]) => (
+							<h6
+								key={key}
+								className="cursor-pointer p-3 hover:bg-black hover:text-white transition-colors duration-200"
+								onClick={() => {
+									setRuleInfo(rule);
+									setShowRuleInfo(true);
+								}}>
+								{parseInt(key) + 1}. {rule.title}
+							</h6>
+						))}
 					</div>
 				</div>
 				{showRuleInfo ? (
@@ -126,5 +120,6 @@ const RulesPage = () => {
 		</motion.div>
 	);
 };
+
 
 export default RulesPage;

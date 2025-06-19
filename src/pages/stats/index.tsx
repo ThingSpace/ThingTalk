@@ -6,6 +6,7 @@ import { prisma } from '@server/db/client';
 import type { StatisticsProps } from '@utils/client.typing';
 import { IoArrowBack } from 'react-icons/io5';
 import { formatNumber } from '@utils/client.util';
+import { getCloudflareAnalytics } from '@utils/cloudflare';
 
 const StatsPage = ({ stats }: { stats: StatisticsProps }) => {
 	const router = useRouter();
@@ -81,12 +82,14 @@ export const getStaticProps = async () => {
 	});
 	const postCount = await prisma.post.count({ where: { isPublished: true } });
 	const journalCount = await prisma.journal.count({ where: { isPublic: true } });
+	const uniqueCountries = await getCloudflareAnalytics(); // This will return country count from Cloudflare
 
 	const stats = {
 		totalUserCount,
 		last24HoursUserCount,
 		postCount,
 		journalCount,
+		uniqueCountries,
 	} as StatisticsProps;
 
 	return {

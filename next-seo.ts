@@ -6,13 +6,14 @@ const config: DefaultSeoProps = {
     locale: 'en_US',
     url: 'https://athing.space',
     siteName: 'A Thing',
+    images: ['/banner.png']
   },
   twitter: {
     site: '@theathingapp',
     cardType: 'summary_large_image',
   },
-  description: 'A Thing is a place to write.',
-  titleTemplate: '%s | A-Thing',
+  description: 'A Thing is a safe, anonymous space for self-expression where you can share your thoughts, keep private journals, and connect with others who understand. No judgments. No traces. Just you being you.',
+  titleTemplate: '%s | A Thing',
   defaultTitle: '<3 You got this',
   themeColor: '#000000',
   additionalLinkTags: [
