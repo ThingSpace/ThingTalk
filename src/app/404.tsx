@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { AiFillBackward } from 'react-icons/ai';
 
-
 const NotFoundAnimations = {
 	hidden: { opacity: 0 },
 	visible: { opacity: 1 },

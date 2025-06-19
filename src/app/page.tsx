@@ -1,7 +1,5 @@
-import Layout from "@components/layout/Hero/Layout";
+import Layout from '@components/layout/Hero/Layout';
 
 export default function Home() {
-	return (
-		<Layout/>
-	);
+	return <Layout />;
 }

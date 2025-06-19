@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import { trpc } from '@utils/trpc';
 import { motion } from 'framer-motion';
 import React from 'react';
@@ -28,7 +28,7 @@ export function Navbar() {
 			transition={{ duration: 0.5 }}>
 			<div className="flex h-[60px] w-[95%] flex-row items-center justify-between rounded-full px-5">
 				<div className="flex font-semibold">@{res.data?.username}</div>
-				<div className="hidden no-select flex-row divide-x-2 divide-gray-300 lg:flex">
+				<div className="no-select hidden flex-row divide-x-2 divide-gray-300 lg:flex">
 					<button
 						className="duration-400 flex px-5 hover:font-semibold"
 						onClick={() => {

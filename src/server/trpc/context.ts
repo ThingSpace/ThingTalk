@@ -1,9 +1,9 @@
-import { type inferAsyncReturnType } from "@trpc/server";
-import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
-import { getSession } from "@utils/server.util";
-import type { NextApiRequest } from "next";
+import { type inferAsyncReturnType } from '@trpc/server';
+import { type CreateNextContextOptions } from '@trpc/server/adapters/next';
+import { getSession } from '@utils/server.util';
+import type { NextApiRequest } from 'next';
 
-import { prisma } from "../db/client";
+import { prisma } from '../db/client';
 
 // /**
 //  * Replace this with an object if you want to pass things to createContextInner
@@ -16,9 +16,9 @@ import { prisma } from "../db/client";
  * @see https://beta.create.t3.gg/en/usage/trpc#-servertrpccontextts
  **/
 export const createContextInner = async () => {
-  return {
-    prisma,
-  };
+	return {
+		prisma,
+	};
 };
 
 /**
@@ -26,16 +26,14 @@ export const createContextInner = async () => {
  * @link https://trpc.io/docs/context
  **/
 export const createContext = async (opts: CreateNextContextOptions) => {
+	const session = (await getSession(opts, prisma)) as string | null;
+	const req = opts.req as NextApiRequest;
 
-  const session = await getSession(opts, prisma) as string | null;
-  const req = opts.req as NextApiRequest;
-
-  return {
-    session,
-    req,
-    prisma
-  };
-
+	return {
+		session,
+		req,
+		prisma,
+	};
 };
 
 export type Context = inferAsyncReturnType<typeof createContext>;

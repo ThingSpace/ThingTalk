@@ -1,4 +1,4 @@
-import Layout from "@components/layout/Rules/Layout";
+import Layout from '@components/layout/Rules/Layout';
 import { type Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,7 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Rules() {
-	return (
-		<Layout />
-	);
+	return <Layout />;
 }

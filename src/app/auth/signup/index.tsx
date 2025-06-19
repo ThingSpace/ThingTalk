@@ -198,7 +198,7 @@ const SignupPage: NextPage = () => {
 							if you forget it we do not store anything about you to identify you.
 						</p>
 						<Button
-						    styles="danger"
+							styles="danger"
 							letterSpaced={true}
 							type="button"
 							onClick={() => {
