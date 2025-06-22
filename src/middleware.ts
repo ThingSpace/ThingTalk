@@ -1,35 +1,36 @@
-import { type NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { jwtVerify } from 'jose';
 
 // This function can be marked `async` if using `await` inside
-export async function middleware(request: NextRequest) {
-    // Fetch the cookies from the request containing our JWT.
-    const authCookie = request.cookies.get('token')?.value;
+export async function middleware(req: NextRequest) {
+    const { pathname } = req.nextUrl;
 
-    // If the cookie is not present, redirect to '/auth/login'.
-    if (!authCookie || authCookie.length === 0) {
-        return NextResponse.redirect(new URL('/auth/login', request.url))
+    // Allow everyone to access /chat/session (for login/session creation)
+    if (pathname.startsWith('/chat/session')) {
+        return NextResponse.next();
     }
 
-    // Validate the JWT token. If it is not valid, redirect to '/auth/login'.
-    try {
-        await jwtVerify(authCookie, new TextEncoder().encode(process.env.JWT_SECRET!));
-    } catch (e) {
-        return NextResponse.redirect(new URL('/auth/login', request.url));
+    // Protect /chat (and subroutes if needed)
+    if (pathname === '/chat') {
+        const token = req.cookies.get('token')?.value;
+        if (!token) {
+            // Redirect unauthenticated users to /chat/session for login/session creation
+            const sessionUrl = new URL('/chat/session', req.url);
+            return NextResponse.redirect(sessionUrl);
+        }
+        try {
+            await jwtVerify(token, new TextEncoder().encode(process.env.JWT_SECRET!));
+        } catch (e) {
+            const sessionUrl = new URL('/chat/session', req.url);
+            return NextResponse.redirect(sessionUrl);
+        }
     }
 
-    // If I have a cookie, but I navigate to /auth (after login from /app). Redirect back to /app. [Other case]
-    // There might be a better solution to do this with matcher. However, It works. : )
-    if (request.nextUrl.pathname.startsWith('/auth')) {
-        return NextResponse.redirect(new URL('/app', request.url))
-    }
-
-    // Yay! Cookie Present and valid. We can proceed to /app route and extract the token to fetch information.
+    // For all other routes, do nothing special
     return NextResponse.next();
-
 }
 
 // This will make sure our middleware only runs on /app/* route. (everything under /app including /app)
 export const config = {
-    matcher: ['/app/:path*', "/auth"],
+    matcher: ['/:path*', "/auth"],
 }

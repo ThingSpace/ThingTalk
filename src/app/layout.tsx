@@ -1,24 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { Navigation } from '@components/ui/Static/Navigation';
-import '../styles/globals.css';
 import Providers from '@components/Providers';
-import RandomTitle from '@components/RandomTitle';
+import '../styles/globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
-
-const titleVariants = [
-	"we are with you",
-	"sometimes you are not alone",
-	"you got this",
-	"you are enough",
-	"just breathe",
-	"<3 You got this"
-];
-
-function getRandomTitle() {
-	return titleVariants[Math.floor(Math.random() * titleVariants.length)] ?? "A Thing";
-}
 
 export const metadata: Metadata = {
 	openGraph: {
@@ -34,8 +19,8 @@ export const metadata: Metadata = {
 	description:
 		'A Thing is a safe, anonymous space for self-expression where you can share your thoughts, keep private journals, and connect with others who understand. No judgments. No traces. Just you being you.',
 	title: {
-		default: getRandomTitle(),
-		template: '%s | A Thing',
+		default: "ThingTalk - AI Mental Health Support",
+		template: '%s | ThingTalk',
 	},
 	themeColor: '#000000',
 };
@@ -48,10 +33,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body className={inter.className}>
-				<RandomTitle />
 				<Providers>
-					<Navigation />
-					<main>{children}</main>
+					<div className="min-h-screen flex flex-col">
+						<main className="flex-1">
+							{children}
+						</main>
+					</div>
 				</Providers>
 			</body>
 		</html>

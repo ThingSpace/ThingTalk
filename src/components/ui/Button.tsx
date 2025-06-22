@@ -36,14 +36,15 @@ const ButtonStyles = cva(
 
 export interface ButtonProps extends VariantProps<typeof ButtonStyles> {
 	children: React.ReactNode;
-	onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+	onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
 	disabled?: boolean;
 	type?: 'button' | 'submit' | 'reset';
+	className?: string;
 }
 
-export const Button = ({ children, onClick, disabled, type, ...props }: ButtonProps) => {
+export const Button = ({ children, onClick, disabled, type, className, ...props }: ButtonProps) => {
 	return (
-		<button onClick={onClick} className={ButtonStyles(props)} disabled={disabled} type={type ?? 'button'}>
+		<button onClick={onClick} className={`${ButtonStyles(props)} ${className || ''}`} disabled={disabled} type={type ?? 'button'}>
 			{children}
 		</button>
 	);

@@ -31,11 +31,22 @@ export interface InputProps extends VariantProps<typeof InputStyles> {
 	onChange?: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>['onChange'];
 	checked?: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>['checked'];
 	onBlur?: React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>['onBlur'];
+	className?: string;
+	canHide?: boolean;
 }
 
-export const Input = ({ id, type, label, value, checked, onChange, ...props }: InputProps) => {
+// Add this style for masking
+const maskedStyle = {
+	['WebkitTextSecurity']: 'disc',
+};
+
+export const Input = ({ id, type, label, value, checked, onChange, className, canHide, ...props }: InputProps) => {
+	const [hidden, setHidden] = React.useState(canHide ? true : false);
 	const [showPassword, setShowPassword] = React.useState(false);
 	const getType = () => {
+		if (canHide) {
+			return 'text'; // Always text for username
+		}
 		if (type === 'password') {
 			return showPassword ? 'text' : 'password';
 		}
@@ -64,15 +75,23 @@ export const Input = ({ id, type, label, value, checked, onChange, ...props }: I
 		<div className="relative flex flex-col">
 			<div className="my-2 flex flex-col">
 				<label htmlFor={id}>{label}</label>
-				<input id={id} type={getType()} className={InputStyles(props)} value={value} onChange={onChange} />
+				<input
+					id={id}
+					type={getType()}
+					className={`${InputStyles(props)} ${className || ''}`}
+					value={value}
+					onChange={onChange}
+					style={canHide && hidden ? (maskedStyle as any) : undefined}
+				/>
 			</div>
-			{type === 'password' && (
+			{(type === 'password' || canHide) && (
 				<div
 					className="animate-fade-in absolute right-2 top-[50%] flex cursor-pointer duration-200"
 					onClick={() => {
-						setShowPassword(!showPassword);
+						if (canHide) setHidden(!hidden);
+						else setShowPassword(!showPassword);
 					}}>
-					{showPassword ? (
+					{(canHide ? !hidden : showPassword) ? (
 						<GrFormView className="flex h-[28px] w-[28px]" />
 					) : (
 						<GrFormViewHide className="flex h-[28px] w-[28px]" />

@@ -16,16 +16,16 @@ const securityHeaders = [
 		value: '1; mode=block',
 	},
 	{
-		key: 'X-Frame-Options', // https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
+		key: 'X-Frame-Options',
 		value: 'SAMEORIGIN',
 	},
 	{
-		key: 'X-Content-Type-Options', // Block the browser from trying to guess the MIME type.
+		key: 'X-Content-Type-Options',
 		value: 'nosniff',
 	},
 	{
 		key: 'Referrer-Policy',
-		value: 'strict-origin-when-cross-origin', // https://scotthelme.co.uk/a-new-security-header-referrer-policy/
+		value: 'strict-origin-when-cross-origin',
 	},
 ];
 
@@ -41,21 +41,6 @@ const config = {
 				headers: securityHeaders,
 			},
 		];
-	},
-	async redirects() {
-		return [
-			{
-				source: '/',
-				has: [
-					{
-						type: 'cookie',
-						key: 'token',
-					},
-				],
-				permanent: false,
-				destination: '/app',
-			},
-		];
-	},
+	}
 };
 export default config;
